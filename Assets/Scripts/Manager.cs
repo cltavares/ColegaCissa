@@ -9,12 +9,19 @@ public class Manager : MonoBehaviour
     public Sprite[] cardFace;
     public Sprite cardBack;
     public GameObject[] cards;
+    public AudioClip[] lstEmitirNomesTurma;
+    public AudioSource pesquisaItensNome;
 
     private bool _init = false;
     private int _matches = 19;
 
+    void Start(){
+        pesquisaItensNome = gameObject.GetComponent<AudioSource>();
+    }
+
 
     void Update() {
+
         if (!_init)
             initializeCards ();
 
@@ -60,7 +67,7 @@ public class Manager : MonoBehaviour
             c.Add (i);
 
         }
-
+        
         if (c.Count == 2)
             cardComparison (c);
     }
@@ -70,13 +77,31 @@ public class Manager : MonoBehaviour
 
         int x = 0;
 
+        pesquisaItensNome.clip = lstEmitirNomesTurma[0];
+        pesquisaItensNome.Play();        
+
         if (cards [c [0]].GetComponent<Card>().cardValue == cards [c [1]].GetComponent<Card>().cardValue){
             x = 2;
             _matches--;
+
+            
+
             //emitir o som
+            for (int k = 0; k < lstEmitirNomesTurma.Length; k++){
+                if (cards [c [0]].GetComponent<Card>().cardValue == k){
+
+                    pesquisaItensNome.clip = lstEmitirNomesTurma[k];
+                    pesquisaItensNome.Play();
+                    Debug.Log("acerto k: "+ k);
+                    Debug.Log("acerto: "+ cards [c [0]].GetComponent<Card>().cardValue);
+                }
+            }
+
         
-            if (_matches == 0)
+            if (_matches == 0){
+                new WaitForSeconds (3);
                 SceneManager.LoadScene(0);
+            }
             
 
         }
